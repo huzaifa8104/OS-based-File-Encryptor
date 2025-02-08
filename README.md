@@ -46,4 +46,3 @@ To explore the implementations in each branch:
    test
    ENCRYPT # after giving directory name, give ENCRYPT or DECRYPT to tell what to do
    ```
-
