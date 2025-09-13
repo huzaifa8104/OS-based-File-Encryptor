@@ -1,18 +1,24 @@
-#include "IO.hpp"
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <string>
+#include "IO.hpp"
+#include <string>
 #include <sstream>
+
+using namespace std;
 
 class ReadEnv{
     public:
-        std::string getenv(){
-            std::string env_path = ".env";
+        string getenv(){
+            string env_path = ".env";
             IO io(env_path);
-            std::fstream f_stream = io.getFileStream();
-            std::stringstream buffer;
+            fstream f_stream = io.getFileStream();
+            stringstream buffer;
             buffer << f_stream.rdbuf();
-            std::string content = buffer.str();
+            string content = buffer.str();
             return content;
-        }    
+        }
 };
