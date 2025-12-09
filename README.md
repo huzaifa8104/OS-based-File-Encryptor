@@ -1,48 +1,67 @@
-# Your Parallel Encryption and Decryption
+# File Encryptor using Multi-Threading
+A multiprocessing + multithreading task-execution engine using shared memory, semaphores, and a background worker thread.  
+Encrypty is designed to queue, manage, and execute system-level tasks securely and efficiently, separating orchestration from execution through a well-defined process and memory model.
 
-## Overview
+## Features
 
-This project demonstrates the implementation of encryption and decryption mechanisms using parallel processing techniques in C++. By leveraging both multiprocessing and multithreading, the project aims to enhance the efficiency and performance of cryptographic operations.
+### Multithreaded Task Execution
+A background **worker thread** continuously polls for tasks and executes them without blocking the main program flow.
 
-## Branches
+### Multiprocessing With Shared Memory
+Tasks are executed in isolated **child processes** created via `fork()`, enabling safer execution of external commands and preventing crashes from affecting the main service.
 
-The repository contains two primary branches, each focusing on a distinct parallel processing approach:
+### Synchronization & Safety
+The system uses:
+- POSIX shared memory (`shm_open`, `mmap`)
+- POSIX semaphores (producer/consumer model)
+- `std::atomic` variables for state tracking  
 
-### 1. `add/childProcessing`
+This ensures proper coordination between threads and processes.
 
-**Description:** This branch showcases the use of parallel multiprocessing by creating child processes to handle encryption and decryption tasks. It utilizes the `fork()` system call to spawn child processes, enabling concurrent execution of tasks.
+### Structured Task Queue
+A shared-memory queue stores:
+- Commands  
+- Parameters  
+- Execution states  
+- Results or exit codes  
 
-**Key Features:**
+## Project Structure
+```
+Encrypty/
+│
+├── src/
+│ ├── ProcessManagement.cpp
+│ ├── ProcessManagement.h
+│ ├── SharedMemory.h
+│ ├── main.cpp
+│ └── utilities...
+│
+├── include/
+│ └── headers used across modules
+│
+├── CMakeLists.txt
+└── README.md
+```
 
-- **Process Management:** Implements process creation and management using `fork()`.
-- **Task Queue:** Manages encryption and decryption tasks using a queue structure.
-- **Task Execution:** Child processes execute tasks independently, allowing parallel processing.
+## Building the Project
 
-### 2. `add/multithreading`
+### Requirements
+- C++17 compiler (GCC / Clang)
+- CMake 3.10+
+- Linux or macOS (for POSIX shared memory)
 
-**Description:** This branch focuses on multithreading combined with shared memory to perform encryption and decryption. It employs POSIX threads (`pthread`) and utilizes shared memory segments for efficient inter-thread communication.
+### Build Steps
 
-**Key Features:**
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+### Running
+```
+./encrypty
+```
 
-- **Multithreading:** Implements concurrent execution using POSIX threads.
-- **Shared Memory:** Utilizes shared memory for communication between threads.
-- **Semaphores:** Employs semaphores to manage synchronization and ensure data consistency.
-
-## Getting Started
-
-To explore the implementations in each branch:
-
-   ```bash
-   git clone <repo-url>
-   cd encrypty
-   git checkout <branch>
-   # Now make a virtual env and activate
-   python -m venv /myvenv
-   source myvenv/bin/activate
-   python makeDirs.py
-   make
-   ./encrypty
-   # type directory name which is created from makeDirs.py
-   test
-   ENCRYPT # after giving directory name, give ENCRYPT or DECRYPT to tell what to do
-   ```
+## License
+This File Encryptor is open source and released under the MIT License. Feel free to use, modify, and distribute it as per the terms of the license.
